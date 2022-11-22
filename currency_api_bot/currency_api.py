@@ -1,36 +1,38 @@
 #!/usr/bin/env python3
-# fd - file descriptor (переменная(объект), которая позволяет работать с указанным файлом)
 
-import json 
+import json
+import requests
 
 
-file_name = "/Users/polina/tgboTest/currency_api_bot/cbr_daily.json"
-fd = open(file_name) 
-currency_json = fd.read() 
-fd.close()
-
-cur_dict = json.loads(currency_json) #парсим (преобразовываем) json в структуру данных, с кот. можно работать
-print(cur_dict["Date"])
+cb_api_path = 'https://www.cbr-xml-daily.ru/daily_json.js'
+response = requests.get(cb_api_path)
+curr_dict = response.json()
+print(curr_dict["Date"])
 
 
 def get_value(currency):
-    value = cur_dict["Valute"][currency]["Value"] 
+    value = curr_dict["Valute"][currency]["Value"]
     return value
 
+
 def get_nominal(currency):
-    nominal = cur_dict["Valute"][currency]["Nominal"] 
+    nominal = curr_dict["Valute"][currency]["Nominal"]
     return nominal
 
+
 def get_name(currency):
-    name = cur_dict["Valute"][currency]["Name"] 
+    name = curr_dict["Valute"][currency]["Name"]
     return name
 
+
 def get_help():
-    cur_list = list() #создали пустой список, куда запишем все значения валют для тг 
-    for cur in sorted(cur_dict["Valute"].keys()): #по очереди в алф. порядке бращаемся ко всем валютам из json
+    curr_list = list() #создали пустой список, куда запишем все значения валют для тг
+    for cur in sorted(curr_dict["Valute"].keys()): #по очереди в алф. порядке бращаемся ко всем валютам из json
         name = get_name(cur)
-        cur_list.append(f'{cur}: {name}') #записываем в список, используя форматирование строк f'...'
-    return "\n".join(cur_list) #возвращаем строку, кот явл объединением всех эл-тов списка 
+        curr_list.append(f'{cur}: {name}') #записываем в список, используя форматирование строк f'...'
+    return "\n".join(curr_list) #возвращаем строку, кот явл объединением всех эл-тов списка
+
+
 """
 cur = input().upper()
 
@@ -44,7 +46,5 @@ nom = get_nominal(cur)
 name = get_name(cur)
 
 print(nom, name, "равняется", val, "российских рублей")
-
 print("1 рубль равняется", nom / val, name)
-
 """
