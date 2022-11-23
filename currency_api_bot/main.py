@@ -15,13 +15,12 @@ token = token_file.read().rstrip('\n')
 bot = telebot.TeleBot(token)
 
 board = keyboard(True, True)
-board.row('Flip')
-
+board.row('Date')
 
 @bot.message_handler(commands=['start'])
 def start(message):
     print(message.from_user.first_name, "Connected")
-    greeting = f"<b>Hello, {message.from_user.first_name}!</b>\nLet's start!"
+    greeting = f"<b>Привет, {message.from_user.first_name}!</b>\nКурс валют обновлён!"
     bot.send_message(
         message.chat.id,
         greeting,
@@ -30,13 +29,25 @@ def start(message):
     )
 
 
+
+
+
 @bot.message_handler(commands=['help'])
 def help(message):
-    print(message.from_user.first_name, "Connected")
     help_msg = ca.get_help()
     bot.send_message(
         message.chat.id,
         help_msg,
+        parse_mode='html',
+        reply_markup=board
+    )
+
+@bot.message_handler(commands=['date'])
+def date(message):
+    date_msg = ca.get_date()
+    bot.send_message(
+        message.chat.id,
+        date_msg,
         parse_mode='html',
         reply_markup=board
     )
@@ -50,12 +61,16 @@ def mess(message):
     if input_msg == 'HELP':
         return help(message)
 
+    if input_msg == 'DATE':
+        return date(message)
+
+    output_msg = ca.get_currency_rate(input_msg)    
+
     bot.send_message(
         message.chat.id,
-        input_msg
+        output_msg,
         parse_mode='html',
         reply_markup=board
     )
-
 
 bot.polling(none_stop=True)
