@@ -17,6 +17,7 @@ bot = telebot.TeleBot(token)
 board = keyboard(True, True)
 board.row('Date', 'Help')
 board.row('USD', 'EUR', 'GBP')
+board.row('AUD', 'AMD', 'BYN')
 
 
 @bot.message_handler(commands=['start'])
