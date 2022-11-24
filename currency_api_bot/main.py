@@ -15,7 +15,9 @@ token = token_file.read().rstrip('\n')
 bot = telebot.TeleBot(token)
 
 board = keyboard(True, True)
-board.row('Date')
+board.row('Date', 'Help')
+board.row('USD', 'EUR', 'GBP')
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
