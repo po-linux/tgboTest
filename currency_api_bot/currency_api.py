@@ -4,13 +4,13 @@ import json
 import requests
 from time import time
 
-ts = time()
 
 cb_api_path = 'https://www.cbr-xml-daily.ru/daily_json.js'
 response = requests.get(cb_api_path)
-curr_dict = response.json()
+curr_dict, ts = response.json(), time()
 
-def update_cache(curr_dict, ts):
+
+def update_cache():
     response = requests.get(cb_api_path)
     curr_dict = response.json()
     print("update_cache")
@@ -18,34 +18,39 @@ def update_cache(curr_dict, ts):
 
 
 def get_value(currency):
+    global curr_dict, ts
     if time() - ts > 300:
-        curr_dict, ts = update_cache(curr_dict, ts)
+        curr_dict, ts = update_cache()
     value = curr_dict["Valute"][currency]["Value"]
     return value
 
 
 def get_nominal(currency):
+    global curr_dict, ts
     if time() - ts > 300:
-        curr_dict, ts = update_cache(curr_dict, ts)
+        curr_dict, ts = update_cache()
     nominal = curr_dict["Valute"][currency]["Nominal"]
     return nominal
 
 
 def get_name(currency):
+    global curr_dict, ts
     if time() - ts > 300:
-        curr_dict, ts = update_cache(curr_dict, ts)
+        curr_dict, ts = update_cache()
     name = curr_dict["Valute"][currency]["Name"]
     return name
 
 
 def get_date():
+    global curr_dict, ts
     if time() - ts > 300:
-        curr_dict, ts = update_cache(curr_dict, ts)
+        curr_dict, ts = update_cache()
     date = curr_dict["Date"]
     return date
 
 
 def get_help():
+    global curr_dict
     curr_list = list()
     for cur in sorted(curr_dict["Valute"].keys()):
         name = get_name(cur)
@@ -54,8 +59,10 @@ def get_help():
 
 
 def get_currency_rate(currency):
+    global curr_dict, ts
     if time() - ts > 300:
-        curr_dict, ts = update_cache(curr_dict, ts)    
+        curr_dict, ts = update_cache()
+
     if currency not in curr_dict["Valute"]:
         return "Указана неизвестная валюта"
 
@@ -69,20 +76,3 @@ def get_currency_rate(currency):
     output += f"1 <b>Российский рубль</b> равняется {curr_rub} <b>{name}</b>"
 
     return output
-
-
-"""
-cur = input().upper()
-
-if cur == "HELP":
-    help_mes = get_help()
-    print(help_mes)
-    exit()
-
-val = get_value(cur)
-nom = get_nominal(cur)
-name = get_name(cur)
-
-print(nom, name, "равняется", val, "российских рублей")
-print("1 рубль равняется", nom / val, name)
-"""
