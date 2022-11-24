@@ -47,8 +47,8 @@ def get_currency_rate(currency):
     rub_curr = val / nom
     curr_rub = nom / val
 
-    output = f"1 <b>{name}</b> равняется {curr_rub} <b>Российских рублей</b>\n"
-    output += f"1 <b>Российский рубль</b> равняется {rub_curr} <b>{name}</b>"
+    output = f"1 <b>{name}</b> равняется {rub_curr} <b>Российских рублей</b>\n"
+    output += f"1 <b>Российский рубль</b> равняется {curr_rub} <b>{name}</b>"
 
     return output
 
