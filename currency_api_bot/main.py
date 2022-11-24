@@ -28,10 +28,7 @@ def start(message):
         reply_markup=board
     )
 
-
-
-
-
+    
 @bot.message_handler(commands=['help'])
 def help(message):
     help_msg = ca.get_help()
@@ -41,6 +38,7 @@ def help(message):
         parse_mode='html',
         reply_markup=board
     )
+
 
 @bot.message_handler(commands=['date'])
 def date(message):
@@ -72,5 +70,6 @@ def mess(message):
         parse_mode='html',
         reply_markup=board
     )
+
 
 bot.polling(none_stop=True)
